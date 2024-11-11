@@ -1,0 +1,19 @@
+<!-- select_participant.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Select Participant</title>
+</head>
+<body>
+    <h1>Select a Participant to Start a Conversation</h1>
+    <ul>
+        {% for participant in participants %}
+            <li>
+                <a href="{% url 'chart:start-conversation' participant.id %}">{{ participant.username }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

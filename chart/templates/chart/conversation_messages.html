@@ -1,0 +1,21 @@
+<!-- chart/templates/chart/conversation_messages.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Conversation Messages</title>
+</head>
+<body>
+    <h1>Conversation with {{ conversation.participants.all|join:", " }}</h1>
+    <div>
+        {% for message in messages %}
+            <div>
+                <strong>{{ message.sender }}:</strong> {{ message.content }}
+            </div>
+        {% empty %}
+            <p>No messages yet.</p>
+        {% endfor %}
+    </div>
+    <a href="{% url 'chart:client-chart' %}">Back to Client Chart</a> <!-- Adjust link as needed -->
+</body>
+</html>

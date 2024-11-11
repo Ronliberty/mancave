@@ -1,0 +1,14 @@
+{% extends 'client/base.html' %}
+
+{% block title %}Requested Services{% endblock %}
+
+{% block content %}
+    <h1 style="font-size: 24px; color: #333; text-align: center; margin-top: 20px;">Book an Appointment</h1>
+    <form method="post" style="width: 80%; height: 50vh; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background-color: #f9f9f9;">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" style="display: block; width: 70%; margin-bottom: 10px; padding: 10px; background-color: #007bff; color: #fff; border: none; border-radius: 5px; cursor: pointer; font-size: 16px;">
+            Book Appointment
+        </button>
+    </form>
+{% endblock %}

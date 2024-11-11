@@ -1,0 +1,13 @@
+{% extends 'manager/base.html' %}
+
+{% block title %}Requested Services{% endblock %}
+
+{% block content %}
+<body style="background-color: #c7eeff; font-family: Arial, sans-serif; margin: 20px;">
+    <h1  style="color: black; text-align: center; margin-bottom: 20px;">Upload a Service</h1>
+    <form method="post" enctype="multipart/form-data" style="max-width: 600px; margin: auto; padding: 20px; background: #a9d7f6; border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" style="width: 70%; padding: 10px; background-color: #007BFF; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px;">Upload</button>
+    </form>
+{% endblock %}

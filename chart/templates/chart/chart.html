@@ -1,0 +1,81 @@
+{% extends "client/base.html" %}
+{% load static %}
+
+{% block title %}Chat with Manager{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'chart/css/styles.css' %}">
+
+<div class="chat-box" id="chat-box">
+    <p class="day"><span>Today</span></p>
+
+    <!-- Display existing messages from the database -->
+    {% for message in messages %}
+        <div class="msg {% if message.sender == request.user %}me{% endif %}">
+            <div class="chat">
+                <div class="profile">
+                    <span class="username">{{ message.sender.username }}</span>
+                    <span class="time">{{ message.timestamp|date:"H:i" }}</span>
+                </div>
+                <p>{{ message.text }}</p>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+<!-- Form to send new messages -->
+<form id="chat-form">
+    <div class="form-group">
+        <input type="text" id="chat-message-input" placeholder="Type...">
+        <button type="button" id="chat-message-submit" class="btn-send"><i class='bx bxs-send'></i></button>
+    </div>
+</form>
+
+<script>
+    const chatBox = document.getElementById('chat-box');
+    const messageInputDom = document.getElementById('chat-message-input');
+    const messageSubmitDom = document.getElementById('chat-message-submit');
+
+    // Establish WebSocket connection
+    const chatSocket = new WebSocket(
+        'ws://' + window.location.host + '/ws/chat/{{ client.id }}/'
+    );
+
+    chatSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        const messageElement = document.createElement('div');
+        messageElement.className = 'msg';
+        if (data.sender === "{{ request.user.username }}") {
+            messageElement.classList.add('me');
+        }
+        messageElement.innerHTML = `
+            <div class="chat">
+                <div class="profile">
+                    <span class="username">${data.sender}</span>
+                    <span class="time">${data.timestamp}</span>
+                </div>
+                <p>${data.message}</p>
+            </div>
+        `;
+        chatBox.appendChild(messageElement);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    };
+
+    messageSubmitDom.onclick = function(e) {
+        const message = messageInputDom.value;
+        if (message.trim()) {
+            chatSocket.send(JSON.stringify({
+                'message': message,
+                'sender': "{{ request.user.username }}"
+            }));
+            messageInputDom.value = '';
+        }
+    };
+
+    messageInputDom.onkeyup = function(e) {
+        if (e.keyCode === 13) {  // Enter key
+            messageSubmitDom.click();
+        }
+    };
+</script>
+{% endblock %}

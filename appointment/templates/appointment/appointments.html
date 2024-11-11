@@ -1,0 +1,21 @@
+{% extends 'manager/base.html' %}
+
+{% block title %}Requested Services{% endblock %}
+
+{% block content %}
+
+<style>
+    body {
+        background-color: #e2eff1; /* Light blue color */
+    }
+</style>
+
+    <h1 style="font-size: 24px; color: #333; text-align: center; margin-bottom: 20px;">All Appointments</h1>
+    <ul style="list-style-type: none; padding: 0; height: 50%;">
+        {% for appointment in appointments %}
+            <li style="display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: #f0f5f9; padding: 10px; margin-bottom: 10px; border-radius: 5px; border: 1px solid #ddd;"> <strong> {{ appointment.date }} at {{ appointment.time }} </strong> - {{ appointment.description }}  <span style="color: {% if appointment.status == 'Confirmed' %}green{% else %}red{% endif %}; font-weight: bold;"> ({{ appointment.status }})   </span> </li>
+        {% empty %}
+            <li style="color: #999; font-style: italic;">No appointments available.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

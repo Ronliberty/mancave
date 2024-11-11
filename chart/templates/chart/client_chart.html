@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Client Chart</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Client Chart</h1>
+     <li>
+        <!-- Directly link to the select_participant URL -->
+        <a href="{% url 'chart:select-participant' %}">Select Participant</a>
+    </li>
+
+    <div>
+        <h2>Your Conversations</h2>
+        <ul>
+            {% for conv in conversation %}
+                <li>
+                    <a href="#" onclick="loadMessages({{ conv.id }})">Conversation ID: {{ conv.id }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div id="messages">
+        <h2>Messages</h2>
+        <ul id="message-list">
+            <!-- Messages will be loaded here -->
+        </ul>
+    </div>
+
+    <div id="message-form">
+        <h3>Send a Message</h3>
+        <form id="send-message-form">
+            <input type="text" id="message-content" placeholder="Enter your message" required>
+            <button type="submit">Send</button>
+        </form>
+    </div>
+
+    <script>
+        function loadMessages(conversationId) {
+            $.ajax({
+                url: `/api/messages/${conversationId}/`,
+                method: 'GET',
+                success: function(response) {
+                    const messageList = $("#message-list");
+                    messageList.empty();
+                    response.messages.forEach(function(message) {
+                        messageList.append(`<li><strong>${message.sender}:</strong> ${message.content}</li>`);
+                    });
+                }
+            });
+        }
+
+        $("#send-message-form").submit(function(event) {
+            event.preventDefault();
+            const content = $("#message-content").val();
+            const conversationId = $('a[onclick^="loadMessages"]').data('conversationId');
+
+            $.ajax({
+                url: `/api/messages/${conversationId}/send/`,
+                method: 'POST',
+                data: {
+                    content: content,
+                },
+                success: function(response) {
+                    if (response.message) {
+                        $("#message-list").append(`<li><strong>${response.message.sender}:</strong> ${response.message.content}</li>`);
+                        $("#message-content").val('');
+                    } else {
+                        alert(response.error);
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

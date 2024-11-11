@@ -1,0 +1,9 @@
+<!-- client_profile.html -->
+<h2>Edit Profile</h2>
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save Changes</button>
+    li><a href="{% url 'user:client_password_change' %}"><i class='bx bxs-user-circle icon' ></i> Change password</a></li>
+        <li><a href="{% url 'user:client_user_update' %}"><i class='bx bxs-user-circle icon' ></i> update username</a></li>
+</form>
